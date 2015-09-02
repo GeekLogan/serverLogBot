@@ -2,19 +2,25 @@
 
 $botId = "<BOT_ID>";
 
-$quote = "a wild test appears";
-$fields = array(
-	'text' => $quote,
-	'bot_id' => $botId
-);
+$stdin = fopen('php://stdin', 'r');
 
-$ch = curl_init("https://api.groupme.com/v3/bots/post");
+while(!feof($stdin)) {
+	$line = fread($stdin, 10000);
+	echo "Sending line...\n";
+	
+	$fields = array(
+		'text' => $line,
+		'bot_id' => $botId
+	);
 
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$ch = curl_init("https://api.groupme.com/v3/bots/post");
 
-$response = curl_exec($ch);
-curl_close($ch);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	$response = curl_exec($ch);
+	curl_close($ch);
+}
 
 ?>
